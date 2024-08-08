@@ -3,8 +3,9 @@ import { Token } from "../utils";
 import { UserService } from "../services";
 import { Types } from "mongoose";
 export interface CustomRequest extends Request {
-  userId?: string | Types.ObjectId;
+  userId?: Types.ObjectId | any;
   userRole?: string | null;
+  restaurantId?: string | Types.ObjectId;
 }
 
 export const authenticateToken = async (

@@ -5,8 +5,9 @@ import {
   UserLogin,
   ChangePassword,
 } from "../interfaces";
-import { UserModel } from "../models";
+import { UserModel, RatingAndReviewModel, RestaurantModel } from "../models";
 import { Password } from "../utils";
+import { RoleEnum } from "../enums";
 export class UserService {
   async create(input: InputUserInterface): Promise<UserInterface> {
     const dataExists = await UserModel.findOne({
@@ -103,6 +104,33 @@ export class UserService {
       { $set: { deletedAt: new Date() } },
       { new: true }
     );
+    if (dataExist.role === RoleEnum.Customer) {
+      await RatingAndReviewModel.updateMany(
+        {
+          user: id,
+          deletedAt: null,
+        },
+        {
+          $set: {
+            deletedAt: new Date(),
+          },
+        }
+      );
+    }
+    if (dataExist.role === RoleEnum.Owner) {
+      await RestaurantModel.updateMany(
+        {
+          owner: id,
+          deletedAt: null,
+        },
+        {
+          $set: {
+            owner: undefined,
+          },
+        }
+      );
+    }
+
     return deleted;
   }
 

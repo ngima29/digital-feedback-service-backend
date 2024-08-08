@@ -20,4 +20,6 @@ export interface RatingAndReviewInterface
   _id: Types.ObjectId;
 }
 export interface ArgsRatingAndReviewInterface
-  extends PaginationOrderSearchExtend {}
+  extends PaginationOrderSearchExtend {
+  ownerId?: Types.ObjectId | string;
+}

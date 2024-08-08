@@ -24,7 +24,7 @@ export class CustomerRouter extends RouterClass {
       exceptionHandler(RatingAndReviewController.create)
     );
     this.router
-      .route("rating-and-review/:id")
+      .route("/rating-and-review/:id")
       .patch(
         Validator.check(updateUser),
         exceptionHandler(RatingAndReviewController.update)

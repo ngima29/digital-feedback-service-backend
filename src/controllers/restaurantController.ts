@@ -3,6 +3,7 @@ import { RestaurantService } from "../services";
 import { successResponseData, errorResponse } from "../utils";
 import { SortEnum } from "../enums";
 import { defaultOrder, defaultSort, pgMinLimit, defaultPage } from "../config";
+import { CustomRequest } from "../middlewares";
 import { HttpStatusEnum } from "../enums";
 import { Token } from "../utils";
 export class RestaurantController {
@@ -78,6 +79,21 @@ export class RestaurantController {
       });
     } catch (error: any) {
       return errorResponse({ error, res, statusCode: 400 });
+    }
+  }
+
+  static async myRestaurant(req: CustomRequest, res: Response): Promise<void> {
+    try {
+      const empId = req.userId!;
+      const updated = await new RestaurantService().getMyRestaurant(empId);
+
+      return successResponseData({
+        data: updated,
+        message: "Restaurant fetch Successfully",
+        res,
+      });
+    } catch (error: any) {
+      return errorResponse({ error, res, statusCode: 404 });
     }
   }
 }

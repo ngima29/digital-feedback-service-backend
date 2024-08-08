@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { Express } from "express";
 import * as errorHandler from "./middlewares/errorHandler";
 import globalError from "./middlewares/globalErrorHandler";
-import { authenticateToken } from "./middlewares";
+import { authenticateToken, isAdmin, isOwner } from "./middlewares";
 import { Database, port, hostUrl } from "./config";
 import path from "path";
 import { ProxyRouter } from "./routes";
@@ -28,9 +28,19 @@ class Server {
     //API Routes
     this.app.use("/api/auth", ProxyRouter.auth());
 
-    this.app.use("/api/admin", authenticateToken, ProxyRouter.admin());
+    this.app.use(
+      "/api/admin",
+      authenticateToken,
+      isAdmin(),
+      ProxyRouter.admin()
+    );
+    this.app.use(
+      "/api/owner",
+      authenticateToken,
+      isOwner(),
+      ProxyRouter.owner()
+    );
     this.app.use("/api/customer", authenticateToken, ProxyRouter.customer());
-    this.app.use("/api/owner", authenticateToken, ProxyRouter.owner());
 
     this.app.get("/", (req, res) => {
       res.send(`Welcome To Digital-Feedback-Service-Backend`);

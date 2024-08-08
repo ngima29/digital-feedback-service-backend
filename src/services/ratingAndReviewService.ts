@@ -4,7 +4,6 @@ import {
   InputRatingAndReviewInterface,
 } from "../interfaces";
 import { RatingAndReviewModel, RestaurantModel } from "../models";
-import mongoose from "mongoose";
 export class RatingAndReviewService {
   async create(
     input: InputRatingAndReviewInterface //ratingAndReview
@@ -38,7 +37,7 @@ export class RatingAndReviewService {
         new: true,
       }
     );
-    //RestaurantModel
+
     return created;
   }
 
@@ -64,7 +63,28 @@ export class RatingAndReviewService {
     if (!updatedData) {
       throw new Error(`Failed to update id : ${id} `);
     }
-
+    if (dataExists.rating !== updates.rating) {
+      const result = await RatingAndReviewModel.aggregate([
+        {
+          $match: { restaurant: dataExists.restaurant },
+        },
+        {
+          $group: {
+            _id: "$restaurant",
+            averageRating: { $avg: "$rating" },
+          },
+        },
+      ]);
+      const avgRating =
+        result.length === 0 ? 0 : Math.ceil(result[0].averageRating);
+      await RestaurantModel.findByIdAndUpdate(
+        dataExists.restaurant,
+        { averageRating: avgRating },
+        {
+          new: true,
+        }
+      );
+    }
     return updatedData;
   }
 
@@ -82,6 +102,26 @@ export class RatingAndReviewService {
       { $set: { deletedAt: new Date() } },
       { new: true }
     );
+    const result = await RatingAndReviewModel.aggregate([
+      {
+        $match: { restaurant: dataExist.restaurant },
+      },
+      {
+        $group: {
+          _id: "$restaurant",
+          averageRating: { $avg: "$rating" },
+        },
+      },
+    ]);
+    const avgRating =
+      result.length === 0 ? 0 : Math.ceil(result[0].averageRating);
+    await RestaurantModel.findByIdAndUpdate(
+      dataExist.restaurant,
+      { averageRating: avgRating },
+      {
+        new: true,
+      }
+    );
     return deleted;
   }
 
@@ -91,6 +131,37 @@ export class RatingAndReviewService {
     query,
     sort,
     order,
+  }: ArgsRatingAndReviewInterface): Promise<RatingAndReviewInterface[]> {
+    try {
+      const filter: any = { deletedAt: null };
+
+      if (query) {
+        filter.fullName = { $regex: query, $options: "i" };
+      }
+
+      const options = {
+        page: page,
+        limit: limit,
+        select: "-deletedAt -password",
+        sort: { createdAt: -1 },
+        lean: true,
+        leanWithId: false,
+      };
+
+      const result = await RatingAndReviewModel.paginate(filter, options);
+      return result;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async myRestaurantRatingAndReview({
+    page,
+    limit,
+    query,
+    sort,
+    order,
+    ownerId,
   }: ArgsRatingAndReviewInterface): Promise<RatingAndReviewInterface[]> {
     try {
       const filter: any = { deletedAt: null };

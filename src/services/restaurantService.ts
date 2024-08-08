@@ -3,7 +3,7 @@ import {
   ArgsRestaurantInterface,
   InputRestaurantInterface,
 } from "../interfaces";
-import { RestaurantModel } from "../models";
+import { RestaurantModel, RatingAndReviewModel } from "../models";
 import slug from "slug";
 export class RestaurantService {
   async create(input: InputRestaurantInterface): Promise<RestaurantInterface> {
@@ -93,6 +93,17 @@ export class RestaurantService {
       { $set: { deletedAt: new Date() } },
       { new: true }
     );
+    await RatingAndReviewModel.updateMany(
+      {
+        restaurant: id,
+        deletedAt: null,
+      },
+      {
+        $set: {
+          deletedAt: new Date(),
+        },
+      }
+    );
     return deleted;
   }
 
@@ -124,5 +135,15 @@ export class RestaurantService {
     } catch (error: any) {
       throw error;
     }
+  }
+  async getMyRestaurant(ownerId: string) {
+    const dataExists = await RestaurantModel.findOne({
+      owner: ownerId,
+      deletedAt: null,
+    });
+    if (!dataExists) {
+      console.log("Restaurant Does not exist");
+    }
+    return dataExists;
   }
 }
