@@ -1,10 +1,15 @@
 import Joi from "joi";
 import { stringSchema, emailSchema, numberSchema } from "./schemas";
 import { UserInterface } from "../interfaces";
-
+import { RoleEnum } from "../enums";
+import { list } from "../utils";
 const createUser = Joi.object<UserInterface>({
   fullName: stringSchema.min(3).max(50).required().label("Full Name"),
   email: emailSchema.required().label("Email"),
+  role: stringSchema
+    .required()
+    .label("Role")
+    .valid(...list(RoleEnum)),
   password: stringSchema.min(4).max(12).required().label("Password"),
   image: stringSchema.allow("", null).optional().label("Image"),
 });
@@ -29,6 +34,13 @@ const updateUser = Joi.object({
 const login = Joi.object({
   email: emailSchema.label("Email").required().trim(),
   password: stringSchema.label("Password").required(),
+});
+
+const signup = Joi.object<UserInterface>({
+  fullName: stringSchema.min(3).max(50).required().label("Full Name"),
+  email: emailSchema.required().label("Email"),
+  password: stringSchema.min(4).max(12).required().label("Password"),
+  image: stringSchema.allow("", null).optional().label("Image"),
 });
 
 const changePassword = Joi.object({
@@ -66,4 +78,5 @@ export {
   forgotPassword,
   confirmForgotPassword,
   updatePassword,
+  signup,
 };

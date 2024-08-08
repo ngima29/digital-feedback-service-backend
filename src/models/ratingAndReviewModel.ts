@@ -1,6 +1,6 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 import { RatingAndReviewInterface, Reply } from "../interfaces";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const replySchema = new Schema<Reply>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -26,8 +26,12 @@ const ratingAndReviewSchema = new Schema<RatingAndReviewInterface>(
     timestamps: true,
   }
 );
+ratingAndReviewSchema.plugin(mongoosePaginate);
+interface RatingAndReviewModel<T extends Document> extends Model<T> {
+  paginate: any;
+}
 
 export const RatingAndReviewModel = mongoose.model<RatingAndReviewInterface>(
   "RatingAndReview",
   ratingAndReviewSchema
-);
+) as RatingAndReviewModel<RatingAndReviewInterface>;

@@ -4,7 +4,7 @@ import { Validator } from "../middlewares";
 import exceptionHandler from "../middlewares/exceptionHandler";
 import { createUser, updateUser } from "../validators";
 
-export class UserRouter extends RouterClass {
+export class OwnerRouter extends RouterClass {
   constructor() {
     super();
   }

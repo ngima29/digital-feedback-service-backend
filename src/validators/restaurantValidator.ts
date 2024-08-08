@@ -5,7 +5,7 @@ import { RestaurantInterface } from "../interfaces";
 const createRestaurant = Joi.object<RestaurantInterface>({
   name: stringSchema.max(100).required().label("Name"),
   description: stringSchema.allow("", null).optional().label("Description"),
-  address: stringSchema.max(200).allow("", null).optional().label("Address"),
+  address: stringSchema.max(200).required().optional().label("Address"),
   location: stringSchema.allow("", null).optional().label("Location"),
   phoneNumber: stringSchema
     .min(9)
@@ -15,7 +15,7 @@ const createRestaurant = Joi.object<RestaurantInterface>({
     .label("Phone Number"),
   owner: stringSchema.allow("", null).optional().label("Owner"),
   logo: stringSchema.allow("", null).optional().label("Logo"),
-  bannerImage: stringSchema.required().label("Banner Image"),
+  bannerImage: stringSchema.allow("", null).label("Banner Image"),
   image: Joi.array()
     .items(stringSchema.allow("", null))
     .optional()

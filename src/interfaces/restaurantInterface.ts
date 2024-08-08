@@ -3,6 +3,7 @@ import { Types, Document } from "mongoose";
 
 export interface InputRestaurantInterface {
   name: string;
+  slug: string;
   description: string;
   address: string;
   location?: string;

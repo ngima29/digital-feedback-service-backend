@@ -1,10 +1,12 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 import { RestaurantInterface } from "../interfaces";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const restaurantSchema = new Schema<RestaurantInterface>(
   {
     name: { type: String, required: true },
-    description: { type: String, required: true },
+    slug: { type: String, required: true },
+    description: { type: String, required: false },
     address: { type: String, required: true },
     location: { type: String },
     phoneNumber: { type: String },
@@ -19,8 +21,12 @@ const restaurantSchema = new Schema<RestaurantInterface>(
     timestamps: true,
   }
 );
+restaurantSchema.plugin(mongoosePaginate);
+interface RestaurantModel<T extends Document> extends Model<T> {
+  paginate: any;
+}
 
 export const RestaurantModel = mongoose.model<RestaurantInterface>(
   "Restaurant",
   restaurantSchema
-);
+) as RestaurantModel<RestaurantInterface>;

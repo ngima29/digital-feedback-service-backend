@@ -106,6 +106,22 @@ export class UserService {
     return deleted;
   }
 
+  async getUser(id: string): Promise<UserInterface> {
+    try {
+      const dataExist = await UserModel.findOne({
+        _id: id,
+        deletedAt: null,
+      });
+
+      if (!dataExist) {
+        throw new Error(`User id : ${id} is not found`);
+      }
+      return dataExist;
+    } catch (error: any) {
+      throw new Error(`Error fetching user: ${error.message}`);
+    }
+  }
+
   async findAndCountAll({
     page,
     limit,

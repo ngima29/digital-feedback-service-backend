@@ -4,13 +4,10 @@ import { Validator } from "../middlewares";
 import exceptionHandler from "../middlewares/exceptionHandler";
 
 import {
-  createUser,
-  updateUser,
+  signup,
   login,
-  changePassword,
   forgotPassword,
   confirmForgotPassword,
-  updatePassword,
 } from "../validators";
 
 export class AuthRouter extends RouterClass {
@@ -21,7 +18,7 @@ export class AuthRouter extends RouterClass {
   define(): void {
     this.router.post(
       "/signup",
-      Validator.check(createUser),
+      Validator.check(signup),
       exceptionHandler(userController.singUp)
     );
 
