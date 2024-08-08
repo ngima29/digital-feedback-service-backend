@@ -1,5 +1,9 @@
 import { RouterClass } from "../classes";
-import { userController } from "../controllers";
+import {
+  userController,
+  RestaurantController,
+  RatingAndReviewController,
+} from "../controllers";
 import { Validator } from "../middlewares";
 import exceptionHandler from "../middlewares/exceptionHandler";
 
@@ -28,11 +32,15 @@ export class AuthRouter extends RouterClass {
       exceptionHandler(userController.login)
     );
 
-    // this.router.post(
-    //   "/change-password",
-    //   Validator.check(changePassword),
-    //   exceptionHandler(userController.changePassword)
-    // );
+    this.router.get(
+      "/restaurants",
+      exceptionHandler(RestaurantController.findAll)
+    );
+
+    this.router.get(
+      "/rating-and-review/:id",
+      exceptionHandler(RatingAndReviewController.getRestaurantRatingsAndReviews)
+    );
 
     // this.router.post(
     //   "/forgot-password",

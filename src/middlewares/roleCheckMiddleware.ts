@@ -4,7 +4,6 @@ import { CustomRequest } from ".";
 export const isAdmin = () => {
   return (req: CustomRequest, res: Response, next: NextFunction) => {
     const empRole = req.userRole;
-    console.log("empRole", empRole);
     if (empRole === RoleEnum.Admin) {
       next();
     } else {
@@ -18,7 +17,6 @@ export const isAdmin = () => {
 export const isOwner = () => {
   return (req: CustomRequest, res: Response, next: NextFunction) => {
     const empRole = req.userRole;
-    console.log("empRole", empRole);
     if (empRole === RoleEnum.Owner) {
       next();
     } else {

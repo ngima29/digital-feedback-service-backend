@@ -190,4 +190,22 @@ export class RatingAndReviewService {
       throw error;
     }
   }
+
+  async getRestaurantRatingAndReview(
+    restaurantId: string
+  ): Promise<RatingAndReviewInterface[]> {
+    try {
+      const result = await RatingAndReviewModel.find({
+        restaurant: restaurantId,
+        deletedAt: null,
+      })
+        .populate("user")
+        .populate("restaurant")
+        .populate("reply");
+
+      return result;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }

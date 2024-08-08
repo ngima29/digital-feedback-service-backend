@@ -81,4 +81,23 @@ export class RatingAndReviewController {
       return errorResponse({ error, res, statusCode: 400 });
     }
   }
+
+  static async getRestaurantRatingsAndReviews(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const { id } = req.params;
+    try {
+      const data =
+        await new RatingAndReviewService().getRestaurantRatingAndReview(id);
+
+      return successResponseData({
+        data: data,
+        message: "list all ratings and reviews ",
+        res,
+      });
+    } catch (error: any) {
+      return errorResponse({ error, res, statusCode: 404 });
+    }
+  }
 }
