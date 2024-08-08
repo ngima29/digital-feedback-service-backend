@@ -3,15 +3,16 @@ import { RatingAndReviewService } from "../services";
 import { successResponseData, errorResponse } from "../utils";
 import { SortEnum } from "../enums";
 import { defaultOrder, defaultSort, pgMinLimit, defaultPage } from "../config";
-import { HttpStatusEnum } from "../enums";
-import { Token } from "../utils";
+import { CustomRequest } from "../middlewares";
 export class RatingAndReviewController {
   constructor() {}
 
-  static async create(req: Request, res: Response): Promise<void> {
+  static async create(req: CustomRequest, res: Response): Promise<void> {
     const data = req.body;
 
     try {
+      const userId = req.userId;
+      data.user = userId;
       const result = await new RatingAndReviewService().create(data);
 
       return successResponseData({

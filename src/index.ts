@@ -26,7 +26,6 @@ class Server {
     this.app.set("views", viewsPath);
 
     //API Routes
-    this.app.use("/api/auth", ProxyRouter.auth());
 
     this.app.use(
       "/api/admin",
@@ -41,7 +40,7 @@ class Server {
       ProxyRouter.owner()
     );
     this.app.use("/api/customer", authenticateToken, ProxyRouter.customer());
-
+    this.app.use("/api", ProxyRouter.auth());
     this.app.get("/", (req, res) => {
       res.send(`Welcome To Digital-Feedback-Service-Backend`);
     });

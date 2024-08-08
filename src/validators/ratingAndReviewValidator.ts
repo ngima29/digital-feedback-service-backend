@@ -8,7 +8,6 @@ const replySchema = Joi.object({
 });
 
 const createRatingAndReview = Joi.object<RatingAndReviewInterface>({
-  user: stringSchema.required().label("User"),
   restaurant: stringSchema.required().label("Restaurant"),
   rating: numberSchema.required().min(0).max(5).label("Rating"),
   review: stringSchema.required().label("Review"),

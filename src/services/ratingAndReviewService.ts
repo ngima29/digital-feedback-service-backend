@@ -146,6 +146,11 @@ export class RatingAndReviewService {
         sort: { createdAt: -1 },
         lean: true,
         leanWithId: false,
+        populate: [
+          { path: "restaurant" },
+          { path: "user" },
+          { path: "reply.userId", select: "fullName" },
+        ],
       };
 
       const result = await RatingAndReviewModel.paginate(filter, options);
